@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do App</title>
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="page1.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <nav>
+    <div class="logo">To-Do App</div>
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="/task">TASK</a>
+      <a href="/addtask">ADD-TASK</a>
+    </div>
+  </nav>
+  <h1>To-do-app</h1>
+
+  <div id="tasks-list">
+
+  </div>
+  <div class="modal fade text-dark" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">UPADTE YOUR TASK</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-dark">
+          <input type="hidden" id="editTaskId">
+          <div class="row gap-3 justify-content-center">
+            <div class="col-8">
+              <label for="taskTitle">TASK TITLE</label>
+              <input type="text" name="title" id="taskTitle" class="form-control">
+            </div>
+            <div class="col-8">
+              <label for="taskDesc">TASK DESC</label>
+              <input type="text" name="desc" id="taskDesc" class="form-control">
+            </div>
+            <div class="col-8">
+              <label for="taskDate">TASK DATE</label>
+              <input type="date" name="date" id="taskDate" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="saveChange()">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const taskList = document.getElementById("tasks-list");
+
+    function loadTask() {
+      fetch("/alltask")
+        .then(res => res.json())
+        .then(data => {
+          taskList.innerHTML = data.map(task => `
+          <li>
+            <div>
+                <strong>${task.title}</strong> - ${task.desc} (${task.date})
+            </div>
+            <div class="actions">
+                    <button class="btn btn-danger me-2" onclick="deleteTask(${task.id})">DELETE</button>
+                    <button class="btn btn-primary me-2" onclick="editTask(${task.id})" data-bs-toggle="modal" data-bs-target="#exampleModal">EDIT</button>
+                </div>
+          </li>
+        `).join('');
+        })
+        .catch(error => {
+          console.error("Error fetching tasks:", error);
+          taskList.innerHTML = "<p>Failed to load tasks.</p>";
+        });
+    }
+
+    async function deleteTask(id) {
+      let response = await fetch("/deletetask", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: id })
+      })
+      let data = await response.json()
+      loadTask(data);
+    }
+
+    function editTask(id) {
+      fetch(`/task/${id}`)
+        .then(res => res.json())
+        .then(task => {
+          document.getElementById("editTaskId").value = task.id;             //
+          document.getElementById("taskTitle").value = task.title;           ////   Assign the value to modal by selected task
+          document.getElementById("taskDesc").value = task.desc;             ////
+          document.getElementById("taskDate").value = task.date;             //
+        })
+    }
+
+    function saveChange(id) {
+      id = parseInt(document.getElementById("editTaskId").value)           //
+      const title = document.getElementById("taskTitle").value             ////  assign the value by using updated data
+      const desc = document.getElementById("taskDesc").value               ////
+      const date = document.getElementById("taskDate").value                //
+
+      fetch("/updatetask", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, title, desc, date })
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log("Task Updated", data)
+          loadTask();                            //reload after update
+
+          //Clos the modal after save changed
+          const modal = bootstrap.Modal.getInstance(document.getElementById("exampleModal"));      
+          modal.hide();
+        })
+        .catch(error => console.log(error));
+
+    }
+
+
+
+    loadTask();
+
+  </script>
+
+</body>
+
+</html>

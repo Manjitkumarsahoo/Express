@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <link rel="stylesheet" href="navbar.css">
+    <link rel="stylesheet" href="page2.css">
+</head>
+
+<body>
+    <nav>
+        <div class="logo">To-Do App</div>
+        <div class="links">
+            <a href="/">Home</a>
+            <a href="/task">TASK</a>
+            <a href="/addtask">ADD-TASK</a>
+        </div>
+    </nav>
+    <h1>Add Task</h1>
+    <form id="form">
+        <label for="title">Task-title</label>
+        <input type="text" name="title"><br><br>
+
+        <label for="desc">Task-desc</label>
+        <input type="text" name="desc"><br><br>
+
+        <label for="date">Date</label>
+        <input type="date" name="date"><br><br>
+
+        <button type="submit">ADD</button>
+    </form>
+
+    <script>
+        const form = document.getElementById("form")
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault()
+
+            // const formData = new FormData(e.target)
+            // const data = {
+            //     title: formData.get("title"),
+            //     desc: formData.get("desc"),
+            //     date: formData.get("date")
+            // };
+            const data = Object.fromEntries(new FormData(form))     //modern js 
+            fetch("/add", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Task added:", data);
+                    form.reset();
+                })
+                .catch(error => console.log(error))
+        })
+    </script>
+</body>
+
+</html>

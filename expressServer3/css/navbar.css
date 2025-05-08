@@ -1,0 +1,27 @@
+nav {
+    display: flex;
+    height: 80px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(26, 67, 105);
+    color: white;
+    padding: 0 2rem;
+  }
+  
+  nav>.links {
+    display: flex;
+    width: 40%;
+    justify-content: space-evenly;
+  }
+  
+  nav>.links>a {
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+  }
+  
+  nav>.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+  }

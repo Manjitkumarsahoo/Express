@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/navbar.css">
+</head>
+
+<body>
+    <nav>
+        <div class="logo">App</div>
+        <div class="links">
+            <a href="/">Home</a>
+            <a href="/pages/about.html">About</a>
+            <a href="/pages/contact.html">Contact Us</a>
+            <a href="/pages/login.html">Login</a>
+        </div>
+    </nav>
+
+    <button id="get-data">Get Data</button>
+    <button id="post">Post Data</button>
+
+    <script>
+        document.getElementById("get-data").addEventListener("click", () => {
+            fetch("/getdata")
+                .then(res => res.json())
+                .then(data => console.log(data))
+                .catch(err => console.log(err))
+        })
+
+        const sendBtn = document.getElementById("post")
+
+        sendBtn.addEventListener("click", async () => {
+            let animal = ["dog", "cow", "cat"]
+            let response = await fetch("/postdata", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify(animal)
+            })
+            let data = await response.json()
+            console.log(data)
+        })
+    </script>
+</body>
+
+</html>
