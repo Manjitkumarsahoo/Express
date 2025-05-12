@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <%- include("./partials/Navbar.ejs")%>      <!-- including Partials (Components) -->
+        <h1>Home Page</h1>
+
+        <!--Using Object Property-->
+        <li>
+            <%=name%>
+        </li>
+        <li>
+            <%=age%>
+        </li>
+        <li>
+            <%=address%>
+        </li>
+
+
+        <!--Using Condition-->
+
+        <%if(age>=18){%>
+            <h1>
+                <%=name%> is Eligible for Vote
+            </h1>
+            <%}%>
+
+
+                <!--Using looping-->
+                <% for(let i=0;i<=10;i++){%>
+                    <li>
+                        <%=i%>
+                    </li>
+                    <%}%>
+</body>
+
+</html>
