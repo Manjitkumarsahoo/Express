@@ -8,24 +8,14 @@ const app = express();
 //db connection
 dbConnect();
 
+//middleware
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 
-app.use("/",userRouter);
+
+// app.use("/",userRouter);
 app.use("/prod",prodRouter);
-
-
-app.use("/user",userRouter);
-app.use("/prods",prodRouter);
-
-
-
-
-
-
-
-
-
+app.use("/users",userRouter);
 
 
 
