@@ -23,3 +23,8 @@ app.use("/users",userRouter);
 app.listen(4000,() => {
     console.log("server run at http://localhost:4000")
 })
+
+// const server = app.listen(0, "0.0.0.0", () => {
+//     const address = server.address();
+//     console.log(`server run at http://localhost:${address.port}`);
+// });

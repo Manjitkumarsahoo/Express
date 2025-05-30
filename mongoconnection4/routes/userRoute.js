@@ -1,5 +1,9 @@
 import express from "express"
-import userModel from "../model/userModel.js"
+import { allUser } from "../controller/userController.js";
+import { createUser } from "../controller/userController.js";
+import { userLogin } from "../controller/userController.js";
+import { userUpdate } from "../controller/userController.js";
+import { deleteUser } from "../controller/userController.js";
 
 const userRouter = express.Router();
 
@@ -7,24 +11,23 @@ const userRouter = express.Router();
 //     res.send("The user Router is Working")
 // })
 
-userRouter.post("/add",async (req,res)=>{
-    try {
-        let data=req.body
-        let response = await userModel.insertOne(data);
-        res.send(response);
-    } catch (error) {
-        console.log(error);
-    }
-})
+//create user
+userRouter.post("/add",createUser)
 
-userRouter.get("/all-user",async (req,res)=>{
-    //get all user from db
-    try {
-        const users = await userModel.find()
-        res.status(200).json(users);
-    } catch (error) {
-        console.log(error.message);
-    }
-})
+//user api
+userRouter.get("/alluser",allUser);
+
+//user login
+userRouter.post("/login",userLogin)
+
+
+//update user
+userRouter.put("/update/:id",userUpdate);
+
+//delete user
+userRouter.delete("/delete",deleteUser)
+
+
+
 
 export default userRouter;
