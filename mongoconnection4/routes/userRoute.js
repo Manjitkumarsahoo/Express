@@ -22,7 +22,7 @@ userRouter.post("/login",userLogin)
 
 
 //update user
-userRouter.put("/update/:id",userUpdate);
+userRouter.put("/update",userUpdate);
 
 //delete user
 userRouter.delete("/delete",deleteUser)
